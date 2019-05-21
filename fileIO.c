@@ -57,7 +57,9 @@ static int validate_line(FILE *map, int cols, int rows)
 
 void validate_map(char *filename)
 {
-    int rows, cols, n, m; /*valid;*/
+    int rows, cols, n, m, i, j; /*valid;*/
+    char ***map_array;
+    char *start, *end, *line;
     FILE *map = fopen(filename, "r");
     if(map == NULL)
     {
@@ -74,19 +76,69 @@ void validate_map(char *filename)
             fseek(map, 1, SEEK_CUR);
             
             
+            fseek(map, 0, SEEK_SET);
+            free(read_line(map));
+                        
+            map_array = (char***)malloc(sizeof(char**) * rows);
+            for(i = 0; i < rows; i++)
+            {
+                map_array[i] = (char**)malloc(sizeof(char*) * cols);
+            }
             if(validate_line(map, cols, rows))
-            {
-                printf("It actually worked you baboone");
+            { 
+                fseek(map, 0, SEEK_SET);
+                free(read_line(map));
+                line = read_line(map);
+                i = 0;
+                j = 0;
+                start = line; 
+                end = strchr(start, ',');
+                while( i * j < (rows - 1) * (cols - 1))
+                {
+                    if(end == NULL)
+                    {
+                        if(strlen(start) > 1)
+                        {
+                            map_array[i][j] = (char*)malloc(sizeof(char) * (strlen(start) + 1));
+                            strcpy(map_array[i][j], start);
+                        }
+                    }
+                    else if((end - start) <= 1)
+                    {
+                        map_array[i][j] = NULL;
+                    }
+                    else
+                    {
+                        map_array[i][j] = (char*)malloc(sizeof(char) * (end - start + 1));
+                        strncpy(map_array[i][j], start, end - start);
+                    }
+                    if(j == cols - 1)
+                    {
+                        j = 0;
+                        i++;
+                        free(line);
+                        line = read_line(map);
+                        start = line;
+                        end = strchr(line, ',');
+                    }
+                    else
+                    {
+                        start = end;
+                        end = strchr(start + 1, ',');
+                    }
+                    j++;
+                }
             }
-            else
+            for(i = 0; i < rows; i++)
             {
-                printf("Yeah, as if monkey boiye");
+                for(j = 0; j < cols; j++)
+                {
+                    if(map_array[i][j] != NULL)
+                    {
+                        printf("%s x = %d, y = %d\n", map_array[i][j], j, i);
+                    }
+                }
             }
-            /*void ***map_array = (void***)malloc(sizeof(void**) * rows);
-            for(i = 0; i < cols; i++)
-            {
-                map_array[i] = (void**)malloc(sizeof(void*) * cols);
-            }*/
         }
         else if(errno != 0)
         {
