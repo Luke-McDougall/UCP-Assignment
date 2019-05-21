@@ -1,1 +1,1 @@
-void map_init(char*);
+void validate_map(char*);

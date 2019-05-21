@@ -11,59 +11,53 @@ static char* read_line(FILE *map)
     int pos = 1, ch;
     char *line = NULL;
     ch = fgetc(map);
-    while(ch != '\n')   /*Exit loop at newline character*/
+    while(ch != '\n' && ch != EOF)   /*Exit loop at newline character*/
     {
         pos++;
         ch = fgetc(map);
     }
-    line = (char*)malloc(sizeof(char) * pos + 1);   /*Allocate memory for line*/
-    fseek(map, (-1)*pos, SEEK_CUR);  /*Return pointer to beginning of line*/
-    fgets(line, pos, map);   /*Fill line with chars from the file*/
-    fseek(map, 1, SEEK_CUR); /*Continue to next line*/
+    if(pos > 1)
+    {
+        line = (char*)malloc(sizeof(char) * pos + 1);   /*Allocate memory for line*/
+        fseek(map, (-1)*pos, SEEK_CUR);  /*Return pointer to beginning of line*/
+        fgets(line, pos, map);   /*Fill line with chars from the file*/
+        fseek(map, 1, SEEK_CUR); /*Continue to next line*/
+    }
     return line;
 }
 
-static char validate_line(FILE *map, int cols)
+static int validate_line(FILE *map, int cols, int rows)
 {
-    char *line = NULL, *temp, *temp2;
-    char valid = TRUE, id;
-    int len = 1, val;
+    char *line = NULL, *temp;
+    int valid = TRUE;
+    int len = 1, height = 1;
     line = read_line(map);
-    
-    temp = strchr(line, ',');
-    while(temp != NULL)
+    while(line != NULL && valid)
     {
-        len++;
-        temp = strchr(temp + 1, ',');
+        temp = strchr(line, ',');
+        while(temp != NULL)
+        {   
+            len++;
+            temp = strchr(temp + 1, ',');
+        }
+        
+        if(len != cols)
+        {
+            valid = FALSE;
+        }
+        len = 1;
+        free(line);
+        line = read_line(map);
+        height++;
     }
 
-    if(len != cols)
-    {
-        valid = FALSE;
-    }
-    
-    temp = strtok(line, ",");
-    while(temp != NULL)
-    {
-        temp2 = strtok(temp, ":");
-        if(temp2 != NULL)
-        {
-            
-        }
-        else
-        {
-            if(!(sscanf(temp2, "%c %d", &id, &val) && (id == 'C' || id == 'c')))
-            {
-                valid = FALSE;
-            }
-        }
-    } 
-    free(line);
+    valid = valid && height != rows;
+    return valid;
 }
 
 void validate_map(char *filename)
 {
-    int rows, cols, n, m;
+    int rows, cols, n, m; /*valid;*/
     FILE *map = fopen(filename, "r");
     if(map == NULL)
     {
@@ -78,7 +72,16 @@ void validate_map(char *filename)
         {
             printf("rows %d, cols %d\n", rows, cols);
             fseek(map, 1, SEEK_CUR);
-            validate_line(map, cols);
+            
+            
+            if(validate_line(map, cols, rows))
+            {
+                printf("It actually worked you baboone");
+            }
+            else
+            {
+                printf("Yeah, as if monkey boiye");
+            }
             /*void ***map_array = (void***)malloc(sizeof(void**) * rows);
             for(i = 0; i < cols; i++)
             {

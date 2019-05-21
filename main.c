@@ -37,7 +37,7 @@ int main(void)
     dude -> equipment[head] = g;    
     print_explorer(dude);
     free_explorer(dude);
-    map_init("map.csv");
+    validate_map("map.csv");
     free_gear(g2);
     return 0;
 }
