@@ -93,13 +93,13 @@ void validate_map(char *filename)
                 j = 0;
                 start = line; 
                 end = strchr(start, ',');
-                while( i * j < (rows - 1) * (cols - 1))
+                while(i < rows)
                 {
                     if(end == NULL)
                     {
                         if(strlen(start) > 1)
                         {
-                            map_array[i][j] = (char*)malloc(sizeof(char) * (strlen(start) + 1));
+                            map_array[i][j] = (char*)calloc((strlen(start) + 1), sizeof(char));
                             strcpy(map_array[i][j], start);
                         }
                     }
@@ -109,24 +109,32 @@ void validate_map(char *filename)
                     }
                     else
                     {
-                        map_array[i][j] = (char*)malloc(sizeof(char) * (end - start + 1));
+                        map_array[i][j] = (char*)calloc((end - start + 1), sizeof(char));
                         strncpy(map_array[i][j], start, end - start);
                     }
-                    if(j == cols - 1)
+                    
+                    j++;
+                    if(j == cols)
                     {
                         j = 0;
                         i++;
                         free(line);
                         line = read_line(map);
                         start = line;
-                        end = strchr(line, ',');
+                        if(start != NULL)
+                        {
+                            end = strchr(line, ',');
+                        }
                     }
                     else
                     {
                         start = end;
                         end = strchr(start + 1, ',');
+                        if(end == NULL)
+                        {
+                            end = strchr(start, '\n');
+                        }
                     }
-                    j++;
                 }
             }
             for(i = 0; i < rows; i++)
