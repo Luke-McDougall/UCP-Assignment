@@ -57,7 +57,7 @@ static int validate_line(FILE *map, int cols, int rows)
 
 void validate_map(char *filename)
 {
-    int rows, cols, n, m, i, j; /*valid;*/
+    int rows, cols, n, m, i, j;
     char ***map_array;
     char *start, *end, *line;
     FILE *map = fopen(filename, "r");
@@ -79,17 +79,16 @@ void validate_map(char *filename)
             fseek(map, 0, SEEK_SET);
             free(read_line(map));
                         
-            map_array = (char***)calloc(rows, sizeof(char**));
+            
+            if(validate_line(map, cols, rows))
+            { 
+                map_array = (char***)calloc(rows, sizeof(char**));
             for(i = 0; i < rows; i++)
             {
                 map_array[i] = (char**)calloc(cols, sizeof(char*));
             }
-            if(validate_line(map, cols, rows))
-            { 
                 fseek(map, 0, SEEK_SET);
                 while(fgetc(map) != '\n');
-                /*fseek(map, 1, SEEK_CUR);
-                free(read_line(map));*/
                 line = read_line(map);
                 i = 0;
                 j = 0;
@@ -127,6 +126,10 @@ void validate_map(char *filename)
                     }
                 }
             }
+            else
+            {
+                
+            }
             for(i = 0; i < rows; i++)
             {
                 for(j = 0; j < cols; j++)
@@ -138,18 +141,7 @@ void validate_map(char *filename)
                 }
             }
 
-            for(i = 0; i < rows; i++)
-            {
-                for(j = 0; j < cols; j++)
-                {
-                    if(map_array[i][j] != NULL)
-                    {
-                        free(map_array[i][j]);
-                    }
-                }
-                free(map_array[i]);
-            }
-            free(map_array);
+            
         }
         else if(errno != 0)
         {
@@ -161,5 +153,21 @@ void validate_map(char *filename)
         }
     }
     fclose(map);
+}
+
+void free_map(char*** map_array)
+{
+    for(i = 0; i < rows; i++)
+    {
+        for(j = 0; j < cols; j++)
+        {
+            if(map_array[i][j] != NULL)
+            {
+                free(map_array[i][j]);
+            }
+        }
+        free(map_array[i]);
+    }
+    free(map_array);
 }
 
