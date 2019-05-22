@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <string.h>
 #include "adventure.h"
+#include "fileIO.h"
 #define TRUE 1
 #define FALSE 0
 
@@ -125,21 +126,23 @@ void validate_map(char *filename)
                         }
                     }
                 }
+                for(i = 0; i < rows; i++)
+                {
+                    for(j = 0; j < cols; j++)
+                    {
+                        if(map_array[i][j] != NULL)
+                        {
+                            printf("%s x = %d, y = %d\n", map_array[i][j], j, i);
+                        }
+                    }
+                }
+                free_map(map_array, rows, cols);
             }
             else
             {
-                
+                printf("Invalid file format.\n"); 
             }
-            for(i = 0; i < rows; i++)
-            {
-                for(j = 0; j < cols; j++)
-                {
-                    if(map_array[i][j] != NULL)
-                    {
-                        printf("%s x = %d, y = %d\n", map_array[i][j], j, i);
-                    }
-                }
-            }
+            
 
             
         }
@@ -155,8 +158,9 @@ void validate_map(char *filename)
     fclose(map);
 }
 
-void free_map(char*** map_array)
+void free_map(char*** map_array, int rows, int cols)
 {
+    int i, j;
     for(i = 0; i < rows; i++)
     {
         for(j = 0; j < cols; j++)
