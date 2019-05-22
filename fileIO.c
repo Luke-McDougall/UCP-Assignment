@@ -79,10 +79,10 @@ void validate_map(char *filename)
             fseek(map, 0, SEEK_SET);
             free(read_line(map));
                         
-            map_array = (char***)malloc(sizeof(char**) * rows);
+            map_array = (char***)calloc(rows, sizeof(char**));
             for(i = 0; i < rows; i++)
             {
-                map_array[i] = (char**)malloc(sizeof(char*) * cols);
+                map_array[i] = (char**)calloc(cols, sizeof(char*));
             }
             if(validate_line(map, cols, rows))
             { 
@@ -95,19 +95,7 @@ void validate_map(char *filename)
                 end = strchr(start, ',');
                 while(i < rows)
                 {
-                    if(end == NULL)
-                    {
-                        if(strlen(start) > 1)
-                        {
-                            map_array[i][j] = (char*)calloc((strlen(start) + 1), sizeof(char));
-                            strcpy(map_array[i][j], start);
-                        }
-                    }
-                    else if((end - start) <= 1)
-                    {
-                        map_array[i][j] = NULL;
-                    }
-                    else
+                    if((end - start) > 1)
                     {
                         map_array[i][j] = (char*)calloc((end - start + 1), sizeof(char));
                         strncpy(map_array[i][j], start, end - start);
@@ -147,6 +135,19 @@ void validate_map(char *filename)
                     }
                 }
             }
+
+            for(i = 0; i < rows; i++)
+            {
+                for(j = 0; j < cols; j++)
+                {
+                    if(map_array[i][j] != NULL)
+                    {
+                        free(map_array[i][j]);
+                    }
+                }
+                free(map_array[i]);
+            }
+            free(map_array);
         }
         else if(errno != 0)
         {
