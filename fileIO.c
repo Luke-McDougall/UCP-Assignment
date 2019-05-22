@@ -87,7 +87,9 @@ void validate_map(char *filename)
             if(validate_line(map, cols, rows))
             { 
                 fseek(map, 0, SEEK_SET);
-                free(read_line(map));
+                while(fgetc(map) != '\n');
+                /*fseek(map, 1, SEEK_CUR);
+                free(read_line(map));*/
                 line = read_line(map);
                 i = 0;
                 j = 0;
