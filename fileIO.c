@@ -56,9 +56,9 @@ static int validate_dimensions(FILE *map, int cols, int rows)
     return valid;
 }
 
-char*** map_init(char *filename)
+char*** map_init(char *filename, int *rows, int *cols)
 {
-    int rows, cols, n, m, i, j, valid = TRUE;
+    int n, m, i, j, valid = TRUE;
     char ***map_array;
     char *start, *end, *line;
     FILE *map = fopen(filename, "r");
@@ -69,24 +69,19 @@ char*** map_init(char *filename)
     else
     {
         errno = 0;
-        n = fscanf(map, "%d,", &rows);
-        m = fscanf(map, "%d", &cols);
+        n = fscanf(map, "%d,", rows);
+        m = fscanf(map, "%d", cols);
         if(n == 1 && m == 1)
         {
-            printf("rows %d, cols %d\n", rows, cols);
             fseek(map, 1, SEEK_CUR);
             
             
-            fseek(map, 0, SEEK_SET);
-            free(read_line(map));
-                        
-            
-            if(validate_dimensions(map, cols, rows))
+            if(validate_dimensions(map, *cols, *rows))
             { 
-                map_array = (char***)calloc(rows, sizeof(char**));
-                for(i = 0; i < rows; i++)
+                map_array = (char***)calloc(*rows, sizeof(char**));
+                for(i = 0; i < *rows; i++)
                 {
-                    map_array[i] = (char**)calloc(cols, sizeof(char*));
+                    map_array[i] = (char**)calloc(*cols, sizeof(char*));
                 }
                 fseek(map, 0, SEEK_SET);
                 while(fgetc(map) != '\n');
@@ -95,7 +90,7 @@ char*** map_init(char *filename)
                 j = 0;
                 start = line; 
                 end = strchr(start, ',');
-                while(i < rows)
+                while(i < *rows)
                 {
                     if((end - start) > 1)
                     {
@@ -106,7 +101,7 @@ char*** map_init(char *filename)
                     }
                     
                     j++;
-                    if(j == cols)
+                    if(j == *cols)
                     {
                         j = 0;
                         i++;
@@ -128,9 +123,9 @@ char*** map_init(char *filename)
                         }
                     }
                 }
-                for(i = 0; i < rows; i++)
+                for(i = 0; i < *rows; i++)
                 {
-                    for(j = 0; j < cols; j++)
+                    for(j = 0; j < *cols; j++)
                     {
                         if(map_array[i][j] != NULL)
                         {
@@ -160,7 +155,7 @@ char*** map_init(char *filename)
     fclose(map);
     if(!valid)
     {
-        free_map(map_array, rows, cols);
+        free_map(map_array, *rows, *cols);
         map_array = NULL;
         printf("Error: invalid file format!\n");
     }
@@ -186,7 +181,7 @@ char*** map_init(char *filename)
 
 int validate_struct(char* entry)
 {
-    int valid = TRUE, value, n = 1;
+    int valid = TRUE, value, n = 1, i;
     char c;
     char buffer[128];
     char *temp = strchr(entry, ':');
@@ -242,8 +237,19 @@ int validate_struct(char* entry)
         
         if(n == 1)
         {
-            printf("%s\n", buffer);
-            n = sscanf(entry, "%*[^:]:%[^:]", buffer);
+            sscanf(entry, "%*[^:]:%[^:]", buffer);
+            for(i = 0; i < strlen(buffer); i++)
+            {
+                if(buffer[i] >= 97 && buffer[i] <= 122)
+                {
+                    buffer[i] -= 32;
+                }
+            }
+            n = strstr(buffer, "HANDS") || strstr(buffer, "HEAD") || strstr(buffer, "CHEST") || strstr(buffer, "LEGS");
+        }
+        else
+        {
+            valid = FALSE;
         }
 
         if(n == 1)

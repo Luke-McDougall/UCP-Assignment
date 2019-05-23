@@ -6,10 +6,12 @@
 
 int main(int argc, char* argv[])
 {
+    int rows, cols;
     explorer *dude;
     gear *g, *g2;
     item *t, *t2;
     char *string, *string2, *string3, *string4;
+    char*** map = NULL;
     dude = explorer_init();
     print_explorer(dude);
     string = (char*)malloc(sizeof(char) * 10);
@@ -37,7 +39,11 @@ int main(int argc, char* argv[])
     dude -> equipment[head] = g;    
     print_explorer(dude);
     free_explorer(dude);
-    map_init(argv[1]);
+    map = map_init(argv[1], &rows, &cols);
+    if(map != NULL)
+    {
+        free_map(map, rows, cols);
+    }
     free_gear(g2);
     return 0;
 }
