@@ -1,0 +1,25 @@
+          Invalid read of size 8
+==14572==    at 0x1099AE: validate_map (fileIO.c:144)
+==14572==    by 0x1093E8: main (main.c:40)
+==14572==  Address 0x522fc40 is 0 bytes inside a block of size 32 free'd
+==14572==    at 0x4C30D3B: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==14572==    by 0x109967: validate_map (fileIO.c:137)
+==14572==    by 0x1093E8: main (main.c:40)
+==14572==  Block was alloc'd at
+==14572==    at 0x4C31B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==14572==    by 0x1096D7: validate_map (fileIO.c:85)
+==14572==    by 0x1093E8: main (main.c:40)
+==14572== 
+==14572== Invalid read of size 8
+==14572==    at 0x1099DA: validate_map (fileIO.c:146)
+==14572==    by 0x1093E8: main (main.c:40)
+==14572==  Address 0x522fc50 is 16 bytes inside a block of size 32 free'd
+==14572==    at 0x4C30D3B: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==14572==    by 0x109967: validate_map (fileIO.c:137)
+==14572==    by 0x1093E8: main (main.c:40)
+==14572==  Block was alloc'd at
+==14572==    at 0x4C31B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==14572==    by 0x1096D7: validate_map (fileIO.c:85)
+==14572==    by 0x1093E8: main (main.c:40)
+==14572== 
+

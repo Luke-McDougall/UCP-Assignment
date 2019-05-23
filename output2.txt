@@ -1,0 +1,20 @@
+coins 0, x pos 0, y pos 0
+Empty
+Empty
+Empty
+Empty
+Oi, bruv 140
+coins 0, x pos 0, y pos 0
+Oi, bruv, value: 140
+Empty
+Empty
+Empty
+BBBBBh, value: 125
+AAAAAr, value: 230
+rows 5, cols 4
+,C 200 x = 2, y = 0
+,G Vibranium Shield:hands:990 x = 1, y = 1
+,C 50 x = 3, y = 1
+M Healing Potion:85 x = 0, y = 2
+,M Defence Enchantment:360 x = 2, y = 2
+,G Lightsaber:hands:850 x = 2, y = 4
