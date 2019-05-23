@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     dude -> equipment[head] = g;    
     print_explorer(dude);
     free_explorer(dude);
-    validate_map(argv[1]);
+    map_init(argv[1]);
     free_gear(g2);
     return 0;
 }
