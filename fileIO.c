@@ -141,7 +141,7 @@ void validate_map(char *filename)
         }
         else
         {
-            fprintf(stderr, "Error: invalid file format!\n");
+            printf("Error: invalid file format!\n");
         }
     }
     fclose(map);
