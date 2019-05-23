@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int main(void)
+int main(int argc, char* argv[])
 {
     explorer *dude;
     gear *g, *g2;
@@ -37,7 +37,7 @@ int main(void)
     dude -> equipment[head] = g;    
     print_explorer(dude);
     free_explorer(dude);
-    validate_map("map.csv");
+    validate_map(argv[1]);
     free_gear(g2);
     return 0;
 }

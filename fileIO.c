@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include "fileIO.h"
 #include "adventure.h"
 #define TRUE 1
 #define FALSE 0
@@ -30,10 +31,11 @@ static int validate_line(FILE *map, int cols, int rows)
 {
     char *line = NULL, *temp;
     int valid = TRUE;
-    int len = 1, height = 1;
+    int len = 1, height = 0;
     line = read_line(map);
     while(line != NULL && valid)
     {
+        height++;
         temp = strchr(line, ',');
         while(temp != NULL)
         {   
@@ -48,10 +50,12 @@ static int validate_line(FILE *map, int cols, int rows)
         len = 1;
         free(line);
         line = read_line(map);
-        height++;
     }
 
-    valid = valid && height != rows;
+    if(height != rows)
+    {
+        valid = FALSE;
+    }
     return valid;
 }
 
@@ -83,10 +87,10 @@ void validate_map(char *filename)
             if(validate_line(map, cols, rows))
             { 
                 map_array = (char***)calloc(rows, sizeof(char**));
-            for(i = 0; i < rows; i++)
-            {
-                map_array[i] = (char**)calloc(cols, sizeof(char*));
-            }
+                for(i = 0; i < rows; i++)
+                {
+                    map_array[i] = (char**)calloc(cols, sizeof(char*));
+                }
                 fseek(map, 0, SEEK_SET);
                 while(fgetc(map) != '\n');
                 line = read_line(map);
@@ -99,7 +103,8 @@ void validate_map(char *filename)
                     if((end - start) > 1)
                     {
                         map_array[i][j] = (char*)calloc((end - start + 1), sizeof(char));
-                        strncpy(map_array[i][j], start, end - start);
+                        strncpy(map_array[i][j], *start == ',' ? start + 1 : start, end - start);
+                        map_array[i][j][end - start] = '\0';
                     }
                     
                     j++;
@@ -125,22 +130,12 @@ void validate_map(char *filename)
                         }
                     }
                 }
+                print_map(map_array, rows, cols);
             }
             else
             {
-                
+               printf("Invalid file\n"); 
             }
-            for(i = 0; i < rows; i++)
-            {
-                for(j = 0; j < cols; j++)
-                {
-                    if(map_array[i][j] != NULL)
-                    {
-                        printf("%s x = %d, y = %d\n", map_array[i][j], j, i);
-                    }
-                }
-            }
-
             
         }
         else if(errno != 0)
@@ -155,8 +150,37 @@ void validate_map(char *filename)
     fclose(map);
 }
 
-void free_map(char*** map_array)
+void print_map(char*** map_array, int rows, int cols)
 {
+    int i, j; 
+    for(i = 0; i < rows; i++)
+    {
+        for(j = 0; j < cols; j++)
+        {
+            if(map_array[i][j] != NULL)
+            {
+                printf("%s x = %d, y = %d\n", map_array[i][j], j, i);
+            }
+        }
+    }
+    free_map(map_array, rows, cols);
+}
+
+/*int validate_struct(char* entry)
+{
+    int valid = TRUE;
+    char c;
+    char *start = entry;
+    char *end = strchr(start, ':');
+    if(end == NULL)
+    {
+        
+    }
+}*/
+
+void free_map(char*** map_array, int rows, int cols)
+{
+    int i, j;
     for(i = 0; i < rows; i++)
     {
         for(j = 0; j < cols; j++)
