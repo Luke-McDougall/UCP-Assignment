@@ -29,27 +29,24 @@ static char* read_line(FILE *map)
 
 static int validate_line(FILE *map, int cols, int rows)
 {
-    char *line = NULL, *temp;
+    char c = fgetc(map);
     int valid = TRUE;
     int len = 1, height = 0;
-    line = read_line(map);
-    while(line != NULL && valid)
+    while(c != EOF && valid)
     {
         height++;
-        temp = strchr(line, ',');
-        while(temp != NULL)
-        {   
-            len++;
-            temp = strchr(temp + 1, ',');
+        while(c != '\n' && c != EOF)
+        {
+            if(c == ',')
+                len++;
+            c = fgetc(map);
         }
-        
         if(len != cols)
         {
             valid = FALSE;
         }
         len = 1;
-        free(line);
-        line = read_line(map);
+        c = fgetc(map);
     }
 
     if(height != rows)
@@ -134,7 +131,7 @@ void validate_map(char *filename)
             }
             else
             {
-               printf("Invalid file\n"); 
+               printf("Error: invalid file format!\n"); 
             }
             
         }
