@@ -10,26 +10,32 @@ typedef struct gear
         {
             char* detail;
             enum gear_slot slot;
-            unsigned short value;
+            int value;
             compare_pointer compare;
         } gear;
 
 typedef struct
         {
             char* detail;
-            unsigned short value;
+            int value;
         } item;
 
 #include "linked_list.h"
 
 typedef struct 
         {
-            unsigned short coins;
-            unsigned short pos_x;
-            unsigned short pos_y;
+            int coins;
+            int pos_x;
+            int pos_y;
             gear **equipment; 
             LinkedList* items;
         } explorer;
+
+typedef struct
+        {
+            int mag;
+            char dir;
+        } move;
 #endif
 
 
@@ -39,8 +45,9 @@ char compare_head(gear*, gear*);
 char compare_chest(gear*, gear*);
 char compare_legs(gear*, gear*);
 char compare_hands(gear*, gear*);
-gear* gear_init(char*, enum gear_slot, unsigned short);
-item* item_init(char*, unsigned short);
+gear* gear_init(char*, enum gear_slot, int);
+item* item_init(char*, int);
+move* move_init(int, char);
 void free_explorer(explorer*);
 void free_gear(gear*);
 void free_item(item*);

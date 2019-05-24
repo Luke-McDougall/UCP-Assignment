@@ -74,7 +74,7 @@ void print_explorer(explorer* pc)
     }
 }
 
-gear* gear_init(char* d, enum gear_slot s, unsigned short v)
+gear* gear_init(char* d, enum gear_slot s, int v)
 {
     gear *g = (gear*)malloc(sizeof(gear));
     g -> detail = d;
@@ -107,7 +107,7 @@ void free_gear(gear *g)
     free(g);
 }
 
-item* item_init(char *d, unsigned short v)
+item* item_init(char *d, int v)
 {
     item *t = (item*)malloc(sizeof(item));
     t -> detail = d;
@@ -119,6 +119,14 @@ void free_item(item *t)
 {
     free(t -> detail);
     free(t);
+}
+
+move* move_init(int mag, char dir)
+{
+    move *m = (move*)malloc(sizeof(move));
+    m -> mag = mag;
+    m -> dir = dir;
+    return m;
 }
 
 char compare_head(gear *hat, gear *hat2)

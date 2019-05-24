@@ -7,6 +7,7 @@
 int main(int argc, char* argv[])
 {
     int rows, cols;
+    LinkedList *movement_list = NULL;
     explorer *dude;
     gear *g, *g2;
     item *t, *t2;
@@ -40,9 +41,15 @@ int main(int argc, char* argv[])
     print_explorer(dude);
     free_explorer(dude);
     map = map_init(argv[1], &rows, &cols);
+    movement_list = load_movement(argv[2]);
     if(map != NULL)
     {
         free_map(map, rows, cols);
+    }
+    if(movement_list != NULL)
+    {
+        printf("U got a liftss bruvera\n\n\n\n\n\n");
+        
     }
     free_gear(g2);
     return 0;

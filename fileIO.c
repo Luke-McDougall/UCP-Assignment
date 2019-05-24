@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#include "fileIO.h"
 #include "adventure.h"
+#include "fileIO.h"
 #define TRUE 1
 #define FALSE 0
 
@@ -291,3 +291,77 @@ void free_map(char*** map_array, int rows, int cols)
     free(map_array);
 }
 
+LinkedList* load_movement(char *filename)
+{
+    LinkedList *movement_list = NULL;
+    FILE *movement = fopen(filename, "r");
+    int valid = TRUE, mag, n, i;
+    char dir;
+    char buffer[6]; /*length of "right"*/
+    move *m;
+    if(movement != NULL)
+    {
+        movement_list = createList();
+        n = fscanf(movement, "%s %d", buffer, &mag);
+        while(n == 2 && valid)
+        {
+            
+            for(i = 0; i < strlen(buffer); i++)
+            {
+                if(buffer[i] >= 97 && buffer[i] <= 122)
+                {
+                    buffer[i] -= 32;
+                }
+            }
+            if(strstr(buffer, "LEFT") != NULL)
+            {
+                dir = 'l';
+            }
+            else if(strstr(buffer, "RIGHT") != NULL)
+            {
+                dir = 'r';
+            }
+            else if(strstr(buffer, "UP") != NULL)
+            {
+                dir = 'u';
+            }
+            else if(strstr(buffer, "DOWN") != NULL)
+            {
+                dir = 'd';
+            }
+            else
+            {
+                valid = FALSE;
+            }
+            
+            if(mag < 1)
+            {
+                valid = FALSE;
+            }
+            if(valid)
+            {
+                m = move_init(mag, dir);
+                insertFirst(movement_list, m);
+            }
+            
+            n = fscanf(movement, "%s %d", buffer, &mag);
+        }
+        fclose(movement);
+    }
+    else
+    {
+        perror("Error in file processing: ");
+    }
+
+    if(!valid)
+    {
+        printf("Invalid file format at %s\n", filename);
+        for(i = 0; i < movement_list -> size; i++)
+        {
+            free((move*)get(movement_list, i));
+        }
+        freeList(movement_list);
+        movement_list = NULL;
+    }
+    return movement_list;
+}
