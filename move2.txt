@@ -1,4 +1,0 @@
-up 2
-lEft 3
-right -8
-dOwN 1
