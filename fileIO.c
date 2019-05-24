@@ -92,6 +92,13 @@ char*** map_init(char *filename, int *rows, int *cols)
                 end = strchr(start, ',');
                 while(i < *rows)
                 {
+                    if(end == NULL && strlen(start) > 1)
+                    {
+                        start = *start == ',' ? start + 1 : start;
+                        map_array[i][j] = (char*)calloc((strlen(start) + 1), sizeof(char));
+                        strncpy(map_array[i][j], start, strlen(start));
+                        map_array[i][j][strlen(start)] = '\0';
+                    }
                     if((end - start) > 1)
                     {
                         start = *start == ',' ? start + 1 : start;
@@ -117,10 +124,10 @@ char*** map_init(char *filename, int *rows, int *cols)
                     {
                         start = end;
                         end = strchr(start + 1, ',');
-                        if(end == NULL)
+                        /*if(end == NULL)
                         {
                             end = strchr(start, '\n');
-                        }
+                        }*/
                     }
                 }
                 for(i = 0; i < *rows; i++)
@@ -193,7 +200,7 @@ int validate_struct(char* entry)
     if(n == 1)
     {
         n = sscanf(entry, "%c %d", &c, &value);
-        if(n != 2)
+        if(n == 2)
         {
             if(c != 'c' && c != 'C')
             {
@@ -368,4 +375,19 @@ LinkedList* load_movement(char *filename)
         movement_list = NULL;
     }
     return movement_list;
+}
+
+void write_log(char *filename, char *entry)
+{
+    FILE *log = NULL;
+    log = fopen(filename, "a");
+    if(log != NULL)
+    {
+        fprintf(log, "%s\n", entry);
+    }
+    else
+    {
+        perror("Error in file processing: ");
+    }
+    fclose(log);
 }

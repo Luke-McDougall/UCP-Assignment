@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[])
 {
-    int rows, cols, i, start_x, start_y;
+    int rows, cols, i, j, start_x, start_y;
     char*** map;
     LinkedList *movement_list;
     explorer *pc;
@@ -18,10 +18,35 @@ int main(int argc, char *argv[])
     movement_list = load_movement(argv[2]);
 
     pc = explorer_init();
+
+    
+    printf("head %d, chest %d, hands %d, legs %d\n", head, chest, hands, legs);
     if(movement_list == NULL)
     {
         printf("this don't make no cents luv\n");
-    } 
+    }
+    for(i = 0; i < rows; i++)
+    {
+        for(j = 0; j < cols; j++)
+        {
+            if(map[i][j] != NULL)
+            {
+                printf("%s |", map[i][j]);
+            }
+            else
+            {
+                printf("-|");
+            }
+        }
+        printf("\n");
+    }
+    if(map[0][0] != NULL)
+    {
+        update(pc, map[pc -> pos_y][pc -> pos_x]);
+        free(map[pc -> pos_y][pc -> pos_x]);
+        map[pc -> pos_y][pc -> pos_x] = NULL;
+    }
+ 
     do
     {
         m = (move*)removeFirst(movement_list);
@@ -29,57 +54,57 @@ int main(int argc, char *argv[])
         {
             case 'l':
             start_x = pc -> pos_x;
-            for(i = start_x; i >= start_x - m -> mag; i--)
+            for(i = start_x; i > start_x - m -> mag; i--)
             {
+                pc -> pos_x -= 1;
                 if(map[pc -> pos_y][pc -> pos_x] != NULL)
                 {
                     update(pc, map[pc -> pos_y][pc -> pos_x]);
                     free(map[pc -> pos_y][pc -> pos_x]);
                     map[pc -> pos_y][pc -> pos_x] = NULL;
                 }
-                pc -> pos_x -= 1;
             }
             break;
             
             case 'r':
             start_x = pc -> pos_x;
-            for(i = start_x; i <= start_x + m -> mag; i++)
+            for(i = start_x; i < start_x + m -> mag; i++)
             {
+                pc -> pos_x += 1;
                 if(map[pc -> pos_y][pc -> pos_x] != NULL)
                 {
                     update(pc, map[pc -> pos_y][pc -> pos_x]);
                     free(map[pc -> pos_y][pc -> pos_x]);
                     map[pc -> pos_y][pc -> pos_x] = NULL;
                 }
-                pc -> pos_x += 1;
             }
             break;
 
             case 'u':
             start_y = pc -> pos_y;
-            for(i = start_y; i >= start_y - m -> mag; i--)
+            for(i = start_y; i > start_y - m -> mag; i--)
             {
+                pc -> pos_y -= 1;
                 if(map[pc -> pos_y][pc -> pos_x] != NULL)
                 {
                     update(pc, map[pc -> pos_y][pc -> pos_x]);
                     free(map[pc -> pos_y][pc -> pos_x]);
                     map[pc -> pos_y][pc -> pos_x] = NULL;
                 }
-                pc -> pos_y -= 1;
             }
             break;
     
             case 'd':
             start_y = pc -> pos_y;
-            for(i = start_y; i <= start_y + m -> mag; i++)
+            for(i = start_y; i < start_y + m -> mag; i++)
             {
+                pc -> pos_y += 1;
                 if(map[pc -> pos_y][pc -> pos_x] != NULL)
                 {
                     update(pc, map[pc -> pos_y][pc -> pos_x]);
                     free(map[pc -> pos_y][pc -> pos_x]);
                     map[pc -> pos_y][pc -> pos_x] = NULL;
                 }
-                pc -> pos_y += 1;
             }
             break;
         }
@@ -134,6 +159,13 @@ void update(explorer *pc, char* entry)
         temp2 = (char*)malloc(sizeof(char) * strlen(buffer) + 1);
         strncpy(temp2, buffer, strlen(buffer) + 1);
         sscanf(entry, "%*[^:]:%*[^:]:%d", &value);
+        for(n = 0; n < strlen(temp2); n++)
+        {
+            if(temp2[n] >= 97 && temp2[n] <= 122)
+            {
+                temp2[n] -= 32;
+            }
+        }
         if(strstr(temp2, "HANDS") != NULL)
         {
             s = hands;
