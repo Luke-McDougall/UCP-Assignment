@@ -303,6 +303,10 @@ LinkedList* load_movement(char *filename)
     {
         movement_list = createList();
         n = fscanf(movement, "%s %d", buffer, &mag);
+        if(n != 2)
+        {
+            valid = FALSE;
+        }
         while(n == 2 && valid)
         {
             
@@ -341,7 +345,7 @@ LinkedList* load_movement(char *filename)
             if(valid)
             {
                 m = move_init(mag, dir);
-                insertFirst(movement_list, m);
+                insertLast(movement_list, m);
             }
             
             n = fscanf(movement, "%s %d", buffer, &mag);

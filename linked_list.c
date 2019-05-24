@@ -72,30 +72,28 @@ void insertLast(LinkedList *list, void *j)
         }
         currNode -> next = newNode;
     }
+    list -> size += 1;
 }
 
 /* function: removeFirst
  * Import: LinkedList *list
- * Export: LinkedList *list
- * Removes the first element of the passed linked list. Returns NULL if list
+ * Export: void *value
+ * Removes the first element of the passed linked list and returns the value. Returns NULL if list
  * is empty
  */
-LinkedList* removeFirst(LinkedList* list)
+void* removeFirst(LinkedList* list)
 {
-    LinkedList *newList;
+    void *value = NULL;
     ListNode *temp;
-    if(list -> head == NULL)
+    if(list -> head != NULL)
     {
-        newList = NULL;
-    }
-    else
-    {
-        free(list -> head -> value);
+        value = list -> head -> value;
         temp = list -> head;
         list -> head = list -> head -> next;
         free(temp);
+        list -> size -= 1;
     }
-    return newList;
+    return value;
 }
 
 /* function: get
