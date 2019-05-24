@@ -1,13 +1,13 @@
 CFLAGS = -ansi -Werror -Wall -pedantic -g
 CC = gcc
-OBJ = linked_list.o adventure.o main.o fileIO.o
-EXEC = main
+OBJ = linked_list.o adventure.o TreasureHunter.o fileIO.o
+EXEC = TreasureHunter
 
 $(EXEC) : $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC)
 
-main.o : main.c adventure.h fileIO.h
-	$(CC) main.c -c $(CFLAGS)
+TreasureHunter.o : TreasureHunter.c adventure.h fileIO.h TreasureHunter.h
+	$(CC) TreasureHunter.c -c $(CFLAGS)
 
 linked_list.o : linked_list.c adventure.h linked_list.h
 	$(CC) linked_list.c -c $(CFLAGS)
