@@ -27,6 +27,26 @@ void explorer_add_item(explorer *pc, item* t)
     insertFirst(pc -> items, v);
 }
 
+void explorer_gear_compare(explorer *pc, gear* g)
+{
+    if(pc -> equipment[g -> slot] == NULL)
+    {
+        pc -> equipment[g -> slot] = g;
+    }
+    else
+    {
+        if(g -> compare(g, pc -> equipment[g -> slot]))
+        {
+            free_gear(pc -> equipment[g -> slot]);
+            pc -> equipment[g -> slot] = g;
+        }
+        else
+        {
+            free_gear(g);
+        }
+    }
+}
+
 void free_explorer(explorer *pc)
 {
     int i, num_item = pc -> items -> size;
@@ -123,7 +143,7 @@ void free_item(item *t)
 
 move* move_init(int mag, char dir)
 {
-    move *m = (move*)malloc(sizeof(move));
+    move *m = (move*)calloc(1, sizeof(move));
     m -> mag = mag;
     m -> dir = dir;
     return m;

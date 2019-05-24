@@ -52,3 +52,4 @@ void free_explorer(explorer*);
 void free_gear(gear*);
 void free_item(item*);
 void explorer_add_item(explorer*, item*);
+void explorer_gear_compare(explorer*, gear*);

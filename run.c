@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[])
 {
-    int rows, cols, i, j, start_x, start_y;
+    int rows, cols, i, j, start_x, start_y, end_x, end_y;
     char*** map;
     LinkedList *movement_list;
     explorer *pc;
@@ -20,11 +20,7 @@ int main(int argc, char *argv[])
     pc = explorer_init();
 
     
-    printf("head %d, chest %d, hands %d, legs %d\n", head, chest, hands, legs);
-    if(movement_list == NULL)
-    {
-        printf("this don't make no cents luv\n");
-    }
+    /*printf("head %d, chest %d, hands %d, legs %d\n", head, chest, hands, legs);*/
     for(i = 0; i < rows; i++)
     {
         for(j = 0; j < cols; j++)
@@ -54,7 +50,8 @@ int main(int argc, char *argv[])
         {
             case 'l':
             start_x = pc -> pos_x;
-            for(i = start_x; i > start_x - m -> mag; i--)
+            end_x = start_x - m -> mag;
+            for(i = start_x; i > end_x; i--)
             {
                 pc -> pos_x -= 1;
                 if(map[pc -> pos_y][pc -> pos_x] != NULL)
@@ -68,7 +65,8 @@ int main(int argc, char *argv[])
             
             case 'r':
             start_x = pc -> pos_x;
-            for(i = start_x; i < start_x + m -> mag; i++)
+            end_x = start_x + m -> mag;
+            for(i = start_x; i < end_x; i++)
             {
                 pc -> pos_x += 1;
                 if(map[pc -> pos_y][pc -> pos_x] != NULL)
@@ -82,7 +80,8 @@ int main(int argc, char *argv[])
 
             case 'u':
             start_y = pc -> pos_y;
-            for(i = start_y; i > start_y - m -> mag; i--)
+            end_y = start_y - m -> mag;
+            for(i = start_y; i > end_y; i--)
             {
                 pc -> pos_y -= 1;
                 if(map[pc -> pos_y][pc -> pos_x] != NULL)
@@ -96,7 +95,8 @@ int main(int argc, char *argv[])
     
             case 'd':
             start_y = pc -> pos_y;
-            for(i = start_y; i < start_y + m -> mag; i++)
+            end_y = start_y + m -> mag;
+            for(i = start_y; i < end_y; i++)
             {
                 pc -> pos_y += 1;
                 if(map[pc -> pos_y][pc -> pos_x] != NULL)
