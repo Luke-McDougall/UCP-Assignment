@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
 
     pc = explorer_init();
 
+    write_log("---");
+
     
     /*printf("head %d, chest %d, hands %d, legs %d\n", head, chest, hands, legs);*/
     for(i = 0; i < rows; i++)
@@ -140,6 +142,7 @@ void update(explorer *pc, char* entry)
     {
         sscanf(entry, "%*[c|C]%d", &value);
         pc -> coins += value;
+        write_coins(value, pc -> pos_x, pc -> pos_y);
     }
     else if(n == 2)
     {
@@ -148,7 +151,8 @@ void update(explorer *pc, char* entry)
         temp = (char*)malloc(sizeof(char) * strlen(buffer) + 1);
         strncpy(temp, buffer, strlen(buffer) + 1);
         i = item_init(temp, value);
-        explorer_add_item(pc, i); 
+        explorer_add_item(pc, i);
+        write_item(i, pc -> pos_x, pc -> pos_y); 
     }
     else
     {

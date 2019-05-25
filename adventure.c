@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "adventure.h"
+#include "fileIO.h"
 #define NUM_GEAR 4
 
 explorer* explorer_init(void)
@@ -32,16 +33,20 @@ void explorer_gear_compare(explorer *pc, gear* g)
     if(pc -> equipment[g -> slot] == NULL)
     {
         pc -> equipment[g -> slot] = g;
+        write_gear(g, pc -> pos_x, pc -> pos_y, 0);
     }
     else
     {
         if(g -> compare(g, pc -> equipment[g -> slot]))
         {
+            write_gear(pc -> equipment[g -> slot], pc -> pos_x, pc -> pos_y, 1);
             free_gear(pc -> equipment[g -> slot]);
             pc -> equipment[g -> slot] = g;
+            write_gear(g, pc -> pos_x, pc -> pos_y, 0);
         }
         else
         {
+            write_gear(g, pc -> pos_x, pc -> pos_y, 1);
             free_gear(g);
         }
     }
@@ -69,29 +74,23 @@ void free_explorer(explorer *pc)
 
 void print_explorer(explorer* pc)
 {
-    int i;
-    int c = pc -> coins;
-    int pos1 = pc -> pos_x;
-    int pos2 = pc -> pos_y;
+    int i, c = pc -> coins, item_val = 0, gear_val = 0;
     int item_num = pc -> items -> size;
-    printf("coins %d, x pos %d, y pos %d\n", c, pos1, pos2);
+    
     for(i = 0; i < NUM_GEAR; i++)
     {
         if(pc -> equipment[i] != NULL)
         {
-            printf("%s, value: %d\n", pc -> equipment[i] -> detail, pc -> equipment[i] -> value);
-        }
-        else
-        {
-            printf("Empty\n");
+            gear_val += pc -> equipment[i] -> value;
         }
     }
 
     for(i = 0; i < item_num; i++)
     {
         item *t = (item*)get(pc -> items, i);
-        printf("%s, value: %d\n", t -> detail, t -> value);
+        item_val += t -> value;
     }
+    printf("COINS: %d\nITEMS: %d\nGEAR: %d\n", c, item_val, gear_val);
 }
 
 gear* gear_init(char* d, enum gear_slot s, int v)

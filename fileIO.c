@@ -377,10 +377,39 @@ LinkedList* load_movement(char *filename)
     return movement_list;
 }
 
-void write_log(char *filename, char *entry)
+void write_coins(int coins, int x, int y)
+{
+    char buffer[128];
+    sprintf(buffer, "COLLECT<COINS, XLOC: %d, YLOC: %d, VALUE: %d>", x, y, coins);
+    write_log(buffer);
+}
+
+void write_item(item *i, int x, int y)
+{
+    char buffer[128];
+    sprintf(buffer, "COLLECT<ITEM, XLOC: %d, YLOC: %d, DESCRIPTION:%s, VALUE: %d", x, y, i -> detail, i -> value);
+    write_log(buffer);
+}
+
+void write_gear(gear *g, int x, int y, int discard)
+{
+    char buffer[128];
+    char *slot[4] = {"head", "chest", "legs", "hands"};
+    if(discard)
+    {
+        sprintf(buffer, "DISCARD<GEAR, XLOC: %d, XLOC: %d, DESCRIPTION:%s, SLOT: %s, VALUE: %d", x, y, g -> detail, slot[g -> slot], g -> value);
+    }
+    else
+    {
+        sprintf(buffer, "COLLECT<GEAR, XLOC: %d, XLOC: %d, DESCRIPTION:%s, SLOT: %s, VALUE: %d", x, y, g -> detail, slot[g -> slot], g -> value);
+    }
+    write_log(buffer);
+}
+
+void write_log(char *entry)
 {
     FILE *log = NULL;
-    log = fopen(filename, "a");
+    log = fopen("adventure.log", "a");
     if(log != NULL)
     {
         fprintf(log, "%s\n", entry);
