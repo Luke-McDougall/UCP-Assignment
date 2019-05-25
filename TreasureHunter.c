@@ -211,6 +211,11 @@ int main(int argc, char *argv[])
         free_explorer(pc);
     }
     #endif
+
+    if(s == ABORTED)
+    {
+        printf("%s\n", str_status[s]);
+    }
     return 0;
 }
 
