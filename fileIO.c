@@ -124,10 +124,6 @@ char*** map_init(char *filename, int *rows, int *cols)
                     {
                         start = end;
                         end = strchr(start + 1, ',');
-                        /*if(end == NULL)
-                        {
-                            end = strchr(start, '\n');
-                        }*/
                     }
                 }
                 for(i = 0; i < *rows; i++)
@@ -168,23 +164,6 @@ char*** map_init(char *filename, int *rows, int *cols)
     }
     return map_array;
 }
-
-/*void print_map(char*** map_array, int rows, int cols)
-{
-    int i, j; 
-    for(i = 0; i < rows; i++)
-    {
-        for(j = 0; j < cols; j++)
-        {
-            if(map_array[i][j] != NULL)
-            {
-                validate_struct(map_array[i][j]);
-                printf("%s x = %d, y = %d\n", map_array[i][j], j, i);
-            }
-        }
-    }
-    free_map(map_array, rows, cols);
-}*/
 
 int validate_struct(char* entry)
 {
@@ -413,6 +392,9 @@ void write_log(char *entry)
     if(log != NULL)
     {
         fprintf(log, "%s\n", entry);
+        #ifdef TreasureHunterLog
+        printf("%s\n", entry);
+        #endif
     }
     else
     {
