@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
 #include "adventure.h"
 #include "fileIO.h"
@@ -68,7 +67,6 @@ char*** map_init(char *filename, int *rows, int *cols)
     }
     else
     {
-        errno = 0;
         n = fscanf(map, "%d,", rows);
         m = fscanf(map, "%d", cols);
         if(n == 1 && m == 1)
@@ -142,17 +140,13 @@ char*** map_init(char *filename, int *rows, int *cols)
             }
             else
             {
-               printf("Error: invalid file format!\n"); 
+               printf("Error: invalid file format at %s!\n", filename); 
             }
             
         }
-        else if(errno != 0)
-        {
-            perror("fscanf");
-        }
         else
         {
-            printf("Error: invalid file format!\n");
+            printf("Error: invalid file format at %s!\n", filename);
         }
     }
     fclose(map);
@@ -185,6 +179,11 @@ int validate_struct(char* entry)
             {
                 valid = FALSE;
             }
+            
+            if(value < 0)
+            {
+                valid = FALSE;    
+            }
         }
     }
     else if(n == 2)
@@ -204,6 +203,15 @@ int validate_struct(char* entry)
             n = sscanf(entry, "%*[^:]:%d", &value);
         }
         else
+        {
+            valid = FALSE;
+        }
+
+        if(n != 1)
+        {
+            valid = FALSE;
+        }
+        else if(value < 0)
         {
             valid = FALSE;
         }
@@ -248,6 +256,10 @@ int validate_struct(char* entry)
         }
         
         if(n != 1)
+        {
+            valid = FALSE;
+        }
+        else if(value < 0)
         {
             valid = FALSE;
         }
@@ -324,7 +336,7 @@ LinkedList* load_movement(char *filename)
                 valid = FALSE;
             }
             
-            if(mag < 1)
+            if(mag < 0)
             {
                 valid = FALSE;
             }
@@ -366,7 +378,7 @@ void write_coins(int coins, int x, int y)
 void write_item(item *i, int x, int y)
 {
     char buffer[128];
-    sprintf(buffer, "COLLECT<ITEM, XLOC: %d, YLOC: %d, DESCRIPTION:%s, VALUE: %d", x, y, i -> detail, i -> value);
+    sprintf(buffer, "COLLECT<ITEM, XLOC: %d, YLOC: %d, DESCRIPTION:%s, VALUE: %d>", x, y, i -> detail, i -> value);
     write_log(buffer);
 }
 
@@ -376,11 +388,11 @@ void write_gear(gear *g, int x, int y, int discard)
     char *slot[4] = {"head", "chest", "legs", "hands"};
     if(discard)
     {
-        sprintf(buffer, "DISCARD<GEAR, XLOC: %d, XLOC: %d, DESCRIPTION:%s, SLOT: %s, VALUE: %d", x, y, g -> detail, slot[g -> slot], g -> value);
+        sprintf(buffer, "DISCARD<GEAR, XLOC: %d, XLOC: %d, DESCRIPTION:%s, SLOT: %s, VALUE: %d>", x, y, g -> detail, slot[g -> slot], g -> value);
     }
     else
     {
-        sprintf(buffer, "COLLECT<GEAR, XLOC: %d, XLOC: %d, DESCRIPTION:%s, SLOT: %s, VALUE: %d", x, y, g -> detail, slot[g -> slot], g -> value);
+        sprintf(buffer, "COLLECT<GEAR, XLOC: %d, XLOC: %d, DESCRIPTION:%s, SLOT: %s, VALUE: %d>", x, y, g -> detail, slot[g -> slot], g -> value);
     }
     write_log(buffer);
 }

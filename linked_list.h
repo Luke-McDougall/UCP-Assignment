@@ -15,7 +15,7 @@ typedef struct
 LinkedList* createList(void);
 void insertFirst(LinkedList*, void*);
 void printList(LinkedList*);
-LinkedList* removeFirst(LinkedList*);
+void* removeFirst(LinkedList*);
 void* get(LinkedList*, int);
 void freeList(LinkedList*);
 void insertLast(LinkedList*, void*);
