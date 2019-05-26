@@ -6,9 +6,11 @@ EXEC = TreasureHunter
 ifdef TreasureHunter
 CFLAGS += -D TreasureHunter=1
 endif
+
 ifdef TreasureHunterAI
 CFLAGS += -D TreasureHunterAI=1
 endif
+
 ifdef TreasureHunterLog
 CFLAGS += -D TreasureHunterLog=1
 endif
