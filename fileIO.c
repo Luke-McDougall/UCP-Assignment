@@ -154,7 +154,7 @@ char*** map_init(char *filename, int *rows, int *cols)
     {
         free_map(map_array, *rows, *cols);
         map_array = NULL;
-        printf("Error: invalid file format!\n");
+        printf("Error: invalid file format at %s!\n", filename);
     }
     return map_array;
 }

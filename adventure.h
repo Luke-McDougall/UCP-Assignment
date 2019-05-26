@@ -8,6 +8,7 @@
  * */
 
 
+#include "linked_list.h"
 #ifndef ADVENTURE
 #define ADVENTURE
 /* gear_slot is used to indicate the SLOT of a gear struct. Using an enum
@@ -19,7 +20,7 @@
 enum gear_slot {head, chest, legs, hands};
 struct gear;
 
-/* compare pointer is a function pointer to a compare functions that compares
+/* compare pointer is a function pointer to a compare function that compares
  * the values of two gear structs. Each type of gear has a different function
  * pointer to a compare function for that type specifically.
  */
@@ -43,7 +44,6 @@ typedef struct
             int value;
         } item;
 
-#include "linked_list.h"
 
 /* explorer struct is used to store data about the explorer in TreasureHunter.
  * The x and y position of the explorer, the number of coins she's collected,

@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     {
         s = ABORTED;
     }
-     
+    
     if(s == COMPLETE)
     {
         do
@@ -288,3 +288,23 @@ void update(explorer *pc, char* entry)
         free(temp2);
     }
 }
+    
+/*void print_map(char*** map, int rows, int cols)
+{
+    int i, j;
+    for(i = 0; i < rows; i++)
+    {
+        for(j = 0; j < cols; j++)
+        {
+            if(map[i][j] != NULL)
+            {
+                printf("%s,", map[i][j]);
+            }
+            else
+            {
+                printf("NULL,");
+            }
+        }
+        printf("\n");
+    }
+}*/

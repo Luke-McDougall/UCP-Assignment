@@ -6,9 +6,9 @@
  * Last updated 18/04/2019
  * */
 
-#include "adventure.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "linked_list.h"
 static void freeRecurse(ListNode *currNode);
 
 /* function: createList
@@ -116,23 +116,6 @@ void* get(LinkedList *list, int i)
     }
     return j;
 }
-
-/* function: printList
- * Import: LinkedList *list
- * Export: none
- * Iterates over a linked list and prints the values of each node
- */
-/*void printList(LinkedList *list)
-{
-    ListNode *currNode = list -> head;
-    void *j;
-    while(currNode != NULL)
-    {
-        j = currNode -> value;
-        printf("%hd-%02hd-%02hd: %s\n", j -> year, j -> month, j -> day, j -> entry);
-        currNode = currNode -> next;
-    }
-}*/
 
 /* function: freeList
  * Import: LinkedList *list
